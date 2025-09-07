@@ -22,7 +22,9 @@
 .bg-fondo{display:flex;align-items:flex-end;padding:10px;padding-top:150px;position:relative;background:rgba(0,0,0,.7)}
 .bg-fondo h4{font-weight:500}
 .bg-fondo::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:url(https://image.tmdb.org/t/p/original/8yPSYhooj8nyBbmV3GVdLDwuE7e.jpg) no-repeat center center / cover;z-index:-1;opacity:.8}
-.modal{margin:50px auto}
+.modal{margin:50px auto; max-width:90%;}
+#modal2 .modal-content { padding: 0; }
+#modal2 video { width: 100% !important; height: auto !important; max-height: 80vh; border-radius: 5px; }
 .iframe-container{position:relative;overflow:hidden;width:100%;padding-top:36.25%}
 .responsive-iframe{position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%}
 #countdown { margin-top:10px; font-weight:bold; color:#ff9800; }
@@ -50,7 +52,7 @@
 <!-- PLAYER -->
 <div id="modal2" class="modal grey darken-4">
   <div class="modal-content white-text">
-    <video id="player" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"></video>
+    <video id="player" class="video-js vjs-big-play-centered" controls preload="auto"></video>
   </div>
   <div class="modal-footer grey darken-4">
     <a href="#!" class="modal-close waves-effect waves-green btn-flat white-text">Cerrar video</a>
@@ -59,7 +61,7 @@
 
 <!-- GENERATOR -->
 <div class="container white-text" style="margin-top:30px;">
-  <h5>🔗 Generator MRZYB-PLAYER</h5>
+  <h5>🔗 Generator Link</h5>
   <p class="grey-text">Masukkan <b>judul</b>, <b>poster</b>, dan <b>link Worker / Drive Index</b>.</p>
 
   <input type="text" id="inputTitle" class="white-text" placeholder="Judul Film" style="background:#222;padding:10px;border-radius:5px;width:100%;margin-bottom:10px;">
