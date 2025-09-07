@@ -1,128 +1,185 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRZYB-PLAYER</title>
-  <!-- Tambah font keren dari Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #111;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
-
-    /* Judul keren */
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 28px; /* diperkecil agar muat 1 baris */
-      color: white; /* teks putih */
-      text-shadow: 0 0 8px #00a2ff, 0 0 16px #7f00ff, 0 0 24px #00a2ff;
-      margin-bottom: 15px;
-      animation: glow 2s infinite alternate;
-    }
-
-    /* Animasi teks glow */
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 8px #00a2ff, 0 0 16px #7f00ff, 0 0 24px #00a2ff;
-      }
-      to {
-        text-shadow: 0 0 15px #00f7ff, 0 0 30px #9a00ff, 0 0 45px #00f7ff;
-      }
-    }
-
-    .logo {
-      margin: 10px 0;
-    }
-    .logo img {
-      width: 120px;
-      border-radius: 15px;
-    }
-    .telegram-link {
-      margin-top: 10px;
-    }
-    .telegram-link a {
-      color: #00a2ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .telegram-link a:hover {
-      text-decoration: underline;
-    }
-
-    /* Input & tombol */
-    input[type="text"] {
-      padding: 10px;
-      width: 60%;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      margin-right: 5px;
-    }
-    button {
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-
-    /* Video player dengan border bercahaya */
-    #videoPlayer {
-      margin-top: 20px;
-      width: 100%;
-      max-width: 600px;
-      border: 3px solid #00a2ff;
-      border-radius: 15px;
-      box-shadow: 0 0 15px #00a2ff, 0 0 30px #00a2ff;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+<title>MRZYB Player Universal</title>
+<style>
+.play-btn {
+  box-shadow: 0 0 15px rgba(20,42,197,0.8);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 10px rgba(20,42,197,0.6); }
+  50% { transform: scale(1.15); box-shadow: 0 0 25px rgba(20,42,197,1); }
+  100% { transform: scale(1); box-shadow: 0 0 10px rgba(20,42,197,0.6); }
+}
+.col img{width:100%;border-radius:5px;margin-bottom:5px}
+.bg-fondo{display:flex;align-items:flex-end;padding:10px;padding-top:150px;position:relative;background:rgba(0,0,0,.7)}
+.bg-fondo h4{font-weight:500}
+.bg-fondo::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:url(https://image.tmdb.org/t/p/original/8yPSYhooj8nyBbmV3GVdLDwuE7e.jpg) no-repeat center center / cover;z-index:-1;opacity:.8}
+.modal{margin:50px auto}
+.iframe-container{position:relative;overflow:hidden;width:100%;padding-top:36.25%}
+.responsive-iframe{position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%}
+#countdown { margin-top:10px; font-weight:bold; color:#ff9800; }
+</style>
 </head>
-<body>
+<body class="grey darken-4" style="background-color: #000 !important;">
 
-  <h1>MRZYB-PLAYER</h1>
+<!-- Tombol Play di atas poster dengan efek glow -->
+<div style="position:absolute; top:20px; right:20px; z-index:1000;">
+  <a href="#modal2" class="btn-floating btn-large blue modal-trigger play-btn" style="background-color:#142ac5 !important;">
+    <i class="large material-icons">play_arrow</i>
+  </a>
+</div>
 
-  <!-- Logo -->
-  <div class="logo">
-    <img src="https://api.pcloud.com/getpubthumb?code=XZ0uuD5ZzfDh2YV37h7eG7CCkCG8O5CRjG4k&linkpassword=&size=512x542&crop=0&type=auto" alt="MRZYB Logo">
+<div class="row bg-fondo">
+  <div class="col s3 m4 l2">
+    <img id="poster" src="https://image.tmdb.org/t/p/w500/2EH42blLQzgqwDWxn39RXkTgb91.jpg" alt="poster">
   </div>
-
-  <!-- Link Telegram -->
-  <div class="telegram-link">
-    <a href="https://t.me/mrzybfilm" target="_blank">Join Telegram @mrzybfilm</a>
+  <div class="col s9 m8 l10">
+    <h4 class="white-text" id="title">Romper el círculo - (2024)</h4>
+    <div id="countdown"></div>
   </div>
+</div>
 
-  <p>Masukkan link video MP4:</p>
-  <input type="text" id="videoLink" placeholder="Paste link MP4 di sini">
-  <button onclick="playVideo()">Tonton</button>
+<!-- PLAYER -->
+<div id="modal2" class="modal grey darken-4">
+  <div class="modal-content white-text">
+    <video id="player" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"></video>
+  </div>
+  <div class="modal-footer grey darken-4">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat white-text">Cerrar video</a>
+  </div>
+</div>
 
-  <br><br>
-  <video id="videoPlayer" controls>
-    <source id="videoSource" src="" type="video/mp4">
-    Browser Anda tidak mendukung video.
-  </video>
+<!-- GENERATOR -->
+<div class="container white-text" style="margin-top:30px;">
+  <h5>🔗 Generator MRZYB-PLAYER</h5>
+  <p class="grey-text">Masukkan <b>judul</b>, <b>poster</b>, dan <b>link Worker / Drive Index</b>.</p>
 
-  <script>
-    function playVideo() {
-      const link = document.getElementById("videoLink").value;
-      const video = document.getElementById("videoPlayer");
-      const source = document.getElementById("videoSource");
-      source.src = link;
-      video.load();
-      video.play();
+  <input type="text" id="inputTitle" class="white-text" placeholder="Judul Film" style="background:#222;padding:10px;border-radius:5px;width:100%;margin-bottom:10px;">
+  <input type="text" id="inputPoster" class="white-text" placeholder="URL Poster" style="background:#222;padding:10px;border-radius:5px;width:100%;margin-bottom:10px;">
+  <input type="text" id="inputLink" class="white-text" placeholder="https://namaworker.workers.dev/?file=video.mp4" style="background:#222;padding:10px;border-radius:5px;width:100%;margin-bottom:10px;">
+
+  <button class="btn blue" onclick="makeShareLink()">Buat Link</button>
+  <div id="shareResult" style="margin-top:15px;"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script>
+M.AutoInit();
+
+function loadMovie(data){
+  if(data.title) document.getElementById("title").innerText = data.title;
+  if(data.poster) document.getElementById("poster").src = data.poster;
+
+  if(data.video){
+    const player = videojs("player");
+    player.src({ src: data.video, type: "video/mp4" });
+
+    // deteksi error expired
+    player.on("error", function() {
+      const err = player.error();
+      if (err && err.code === 4) {
+        showExpiredMessage();
+      }
+    });
+  }
+}
+
+// Countdown ke jam 12 siang
+function startCountdown() {
+  function updateCountdown() {
+    const now = new Date();
+    const expiry = new Date();
+    expiry.setHours(12, 0, 0, 0); // jam 12 siang
+
+    // kalau sudah lewat 12 siang hari ini, pakai besok
+    if (now > expiry) {
+      expiry.setDate(expiry.getDate() + 1);
     }
-  </script>
 
+    const diff = expiry - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    if (diff <= 0) {
+      showExpiredMessage();
+    } else {
+      const tanggal = expiry.toLocaleDateString('id-ID');
+      const jam = expiry.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById("countdown").innerText = `⏳ Link akan expired dalam ${hours}j ${minutes}m ${seconds}d | Expired: ${tanggal} ${jam} WIB`;
+    }
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
+function showExpiredMessage() {
+  document.getElementById("modal2").innerHTML = `
+    <div class="modal-content white-text center-align" style="padding:40px;">
+      <h4>⚠️ Link sudah kadaluarsa</h4>
+      <p>Silakan gabung group Telegram untuk mendapatkan link baru:</p>
+      <a href="https://t.me/mrzyb_movie" target="_blank" class="btn blue">Gabung Group</a>
+    </div>
+  `;
+  document.getElementById("countdown").innerText = "⚠️ Link sudah kadaluarsa";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const encoded = params.get("data");
+  if(encoded){
+    try {
+      const decoded = atob(encoded);
+      const obj = JSON.parse(decoded);
+      loadMovie(obj);
+    } catch(e) {
+      console.error("Link tidak valid!", e);
+    }
+  } else {
+    loadMovie({
+      title: "Romper el círculo - (2024)",
+      poster: "https://image.tmdb.org/t/p/w500/2EH42blLQzgqwDWxn39RXkTgb91.jpg",
+      video: "https://filmmrzyb.ukielaki8387.workers.dev/download.aspx?file=contoh.mp4"
+    });
+  }
+  startCountdown();
+});
+
+function makeShareLink() {
+  const title = document.getElementById("inputTitle").value.trim();
+  const poster = document.getElementById("inputPoster").value.trim();
+  const video = document.getElementById("inputLink").value.trim();
+
+  if(!video){
+    document.getElementById("shareResult").innerHTML = "<p class='red-text'>⚠️ Masukkan link!</p>";
+    return;
+  }
+
+  try {
+    const data = { title, poster, video };
+    const encoded = btoa(JSON.stringify(data));
+    const finalUrl = window.location.origin + window.location.pathname + "?data=" + encoded;
+
+    loadMovie(data);
+
+    document.getElementById("shareResult").innerHTML = `
+      <p>✅ Link siap copy:</p>
+      <input type="text" value="${finalUrl}" readonly style="background:#111;color:#0f0;padding:8px;width:100%;border:none;border-radius:5px;" onclick="this.select()">
+    `;
+  } catch(e){
+    document.getElementById("shareResult").innerHTML = "<p class='red-text'>⚠️ Data tidak valid!</p>";
+  }
+}
+</script>
 </body>
 </html>
